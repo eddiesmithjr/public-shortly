@@ -11,7 +11,7 @@ var Link = require('../app/models/link');
 // NOTE: these tests are designed for mongo!
 /////////////////////////////////////////////////////
 
-xdescribe('', function() {
+describe('', function() {
 
   beforeEach(function(done) {
     // Log out currently signed in user
@@ -220,8 +220,8 @@ xdescribe('', function() {
       request(app)
         .post('/login')
         .send({
-          'username': 'Phillip',
-          'password': 'Phillip' })
+          'username': 'Svnh',
+          'password': 'Svnh' })
         .expect(302)
         .expect(function(res) {
           expect(res.headers.location).to.equal('/');
