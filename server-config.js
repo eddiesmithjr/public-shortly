@@ -15,12 +15,19 @@ app.use(partials());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-app.use(cookieParser('shhhh, very secret'));
+app.use(cookieParser('shhhh, very secret'));//what is cookie parser used for?
 app.use(session({
   secret: 'shhh, it\'s a secret',
   resave: false,
   saveUninitialized: true
 }));
+
+//Set up mongoose connection
+var mongoose = require('mongoose');
+var mongoDB = 'mongodb://localhost:27017/shortlydep';
+mongoose.connect(mongoDB);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.get('/', util.checkUser, handler.renderIndex);
 app.get('/create', util.checkUser, handler.renderIndex);

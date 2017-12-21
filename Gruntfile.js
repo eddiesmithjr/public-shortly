@@ -1,8 +1,13 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: { separator: ';' },
+      dist: {
+        src: ['public/client/**/*.js'],
+        dest: 'public/dist/<%= pkg.name %>.js'
+      }
     },
 
     mochaTest: {
@@ -21,10 +26,20 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      target: {
+        files: {
+          'public/dist/<%= pkg.name %>.js.min.js': ['public/client/**/*.js']
+        }
+      }
     },
+    // target: {
+    //   src: '<%= paths.src.js %>',
+    //   dest: '<%= paths.dest.jsMin %>'
+    // }
 
     eslint: {
       target: [
+        'server.js'
         // Add list of files to lint here
       ]
     },
@@ -65,7 +80,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
 
   grunt.registerTask('server-dev', function (target) {
-    grunt.task.run([ 'nodemon', 'watch' ]);
+    grunt.task.run(['nodemon', 'watch']);
   });
 
   ////////////////////////////////////////////////////
@@ -76,20 +91,22 @@ module.exports = function(grunt) {
     'mochaTest'
   ]);
 
-  grunt.registerTask('build', [
-  ]);
+  grunt.registerTask('build', ['concat', 'uglify']);
+  grunt.registerTask('default', ['build']);
 
-  grunt.registerTask('upload', function(n) {
+  grunt.registerTask('upload', function (n) {
     if (grunt.option('prod')) {
+      grunt.task.run(['build']);
+
       // add your production server task here
     } else {
-      grunt.task.run([ 'server-dev' ]);
+      grunt.task.run(['server-dev']);
     }
   });
 
-  grunt.registerTask('deploy', [
+  grunt.registerTask('deploy', ['mochaTest', 'build'
     // add your deploy tasks here
-  ]);
+]);
 
 
 };
